@@ -21,7 +21,5 @@ public class Player
     public void paintComponent( Graphics window )
     {
         Graphics2D graphics2D = (Graphics2D) window;
-
     }
-
 }

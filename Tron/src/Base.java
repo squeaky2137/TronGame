@@ -7,7 +7,6 @@ import java.util.*;
 public class Base extends JComponent implements Runnable
 {
     private Player[] players;
-    private int mapsize = 80;
     public Base()
     {
         //Initiate players
@@ -33,8 +32,6 @@ public class Base extends JComponent implements Runnable
                 graphics2D.drawRect(i, j, 80, 80);
             }
         }
-
-
     }
 
     public void run()

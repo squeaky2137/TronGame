@@ -6,9 +6,7 @@ public class TronRunner extends JFrame implements KeyListener
 {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
-
     private Base b;
-
     public TronRunner()
     {
         super("Tron");
@@ -17,7 +15,6 @@ public class TronRunner extends JFrame implements KeyListener
 
         b = new Base();
         add( b);
-
 
         setVisible(true);
         addKeyListener(this);
@@ -30,11 +27,6 @@ public class TronRunner extends JFrame implements KeyListener
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
     public void keyPressed(KeyEvent e)
     {
         switch(e.getKeyCode())
@@ -44,7 +36,10 @@ public class TronRunner extends JFrame implements KeyListener
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyTyped(KeyEvent e) {
+    }
 
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }
