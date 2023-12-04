@@ -13,7 +13,10 @@ public class Base extends JComponent implements Runnable, KeyListener
     private boolean A;
     private boolean S;
     private boolean D;
-
+    private boolean UP;
+    private boolean DOWN;
+    private boolean LEFT;
+    private boolean RIGHT;
 
     public Base()
     {
@@ -25,6 +28,10 @@ public class Base extends JComponent implements Runnable, KeyListener
         A = false;
         S = false;
         D = false;
+        UP = false;
+        LEFT = false;
+        DOWN = false;
+        RIGHT = false;
 
         //Start Thread
         setBackground(Color.WHITE);
@@ -125,7 +132,10 @@ public class Base extends JComponent implements Runnable, KeyListener
         }
         if (e.getKeyCode() == KeyEvent.VK_UP)
         {
-            players.get(1).up();
+            UP = true;
+            LEFT = false;
+            DOWN = false;
+            RIGHT = true;
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT)
         {
