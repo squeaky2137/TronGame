@@ -4,15 +4,32 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
 
+import java.awt.event.KeyEvent.*;
+
 public class Base extends JComponent implements Runnable, KeyListener
 {
-    private Player[] players;
+    private ArrayList<Player> players;
+    private boolean W;
+    private boolean A;
+    private boolean S;
+    private boolean D;
+
 
     public Base()
     {
-        //Initiate players
+        //Instantiate Players
+        players = new ArrayList<>();
+        players.add(new Player(Color.RED, 700, 700));
+        players.add(new Player(Color.BLUE, 100, 100));
+        W = false;
+        A = false;
+        S = false;
+        D = false;
+
+        //Start Thread
         setBackground(Color.WHITE);
         addKeyListener(this);
+        setFocusable(true);
         new Thread(this).start();
     }
 
@@ -26,6 +43,7 @@ public class Base extends JComponent implements Runnable, KeyListener
         {
             for (int j = 0; j < 800; j+=80)
             {
+                //draw Background
                 graphics2D.setColor(Color.BLACK);
                 graphics2D.fillRect(i,j, 80, 80);
                 graphics2D.setColor(Color.GRAY);
@@ -33,6 +51,13 @@ public class Base extends JComponent implements Runnable, KeyListener
                 graphics2D.drawRect(i, j, 80, 80);
 
                 //draw Players
+                for (Player p : players)
+                {
+                    graphics2D.setColor(p.getColor());
+                    graphics2D.fillRect(p.getX(), p.getY(), 10,10);
+                    for (Path path : p.getPaths())
+                        graphics2D.fillRect(path.getX(), path.getY(), 10,10);
+                }
             }
         }
     }
@@ -44,6 +69,14 @@ public class Base extends JComponent implements Runnable, KeyListener
             while( true )
             {
                 Thread.sleep(50);
+                if (W)
+                    players.get(0).up();
+                if (A)
+                    players.get(0).left();
+                if (S)
+                    players.get(0).down();
+                if (D)
+                    players.get(0).right();
                 repaint();
             }
         }
@@ -62,9 +95,49 @@ public class Base extends JComponent implements Runnable, KeyListener
     @Override
     public void keyPressed(KeyEvent e)
     {
-        switch(e.getKeyCode())
+        if (e.getKeyCode() == KeyEvent.VK_W)
         {
-            //switch between keys
+            W = true;
+            A = false;
+            S = false;
+            D = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_A)
+        {
+            W = false;
+            A = true;
+            S = false;
+            D = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_S)
+        {
+            W = false;
+            A = false;
+            S = true;
+            D = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_D)
+        {
+            W = false;
+            A = false;
+            S = false;
+            D = true;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_UP)
+        {
+            players.get(1).up();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT)
+        {
+            players.get(1).left();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_DOWN)
+        {
+            players.get(1).down();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+        {
+            players.get(1).right();
         }
     }
 

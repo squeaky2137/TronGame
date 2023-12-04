@@ -20,22 +20,26 @@ public class Player
 
     public void right()
     {
-        x += 1;
+        paths.add( new Path(x, y) );
+        x += 5;
     }
 
     public void left()
     {
-      x -= 1;
+        paths.add( new Path(x, y) );
+        x -= 5;
     }
 
     public void up()
     {
-        y -= 1;
+        paths.add( new Path(x, y) );
+        y -= 5;
     }
 
     public void down()
     {
-        y += 1;
+        paths.add( new Path(x, y) );
+        y += 5;
     }
     public int getX()
     {
@@ -45,6 +49,16 @@ public class Player
     public int getY()
     {
         return y;
+    }
+
+    public Color getColor()
+    {
+        return color;
+    }
+
+    public ArrayList<Path> getPaths()
+    {
+        return paths;
     }
 
     public void paintComponent( Graphics window )
