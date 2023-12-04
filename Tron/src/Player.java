@@ -18,6 +18,35 @@ public class Player
         this.paths = new ArrayList<>();
     }
 
+    public void right()
+    {
+        x += 1;
+    }
+
+    public void left()
+    {
+      x -= 1;
+    }
+
+    public void up()
+    {
+        y -= 1;
+    }
+
+    public void down()
+    {
+        y += 1;
+    }
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
+    }
+
     public void paintComponent( Graphics window )
     {
         Graphics2D graphics2D = (Graphics2D) window;

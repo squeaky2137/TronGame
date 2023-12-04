@@ -4,14 +4,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
 
-public class Base extends JComponent implements Runnable
+public class Base extends JComponent implements Runnable, KeyListener
 {
     private Player[] players;
+
     public Base()
     {
         //Initiate players
         setBackground(Color.WHITE);
-
+        addKeyListener(this);
         new Thread(this).start();
     }
 
@@ -30,6 +31,8 @@ public class Base extends JComponent implements Runnable
                 graphics2D.setColor(Color.GRAY);
                 graphics2D.setStroke(new BasicStroke(2));
                 graphics2D.drawRect(i, j, 80, 80);
+
+                //draw Players
             }
         }
     }
@@ -48,5 +51,26 @@ public class Base extends JComponent implements Runnable
         {
 
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e)
+    {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e)
+    {
+        switch(e.getKeyCode())
+        {
+            //switch between keys
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e)
+    {
+
     }
 }
