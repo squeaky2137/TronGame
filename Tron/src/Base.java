@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent.*;
 public class Base extends JComponent implements Runnable, KeyListener
 {
     private ArrayList<Player> players;
+    private ArrayList<Path> allPaths;
     private boolean W;
     private boolean A;
     private boolean S;
@@ -18,12 +19,15 @@ public class Base extends JComponent implements Runnable, KeyListener
     private boolean LEFT;
     private boolean RIGHT;
 
+    private boolean gameRun;
+
     public Base()
     {
         //Instantiate Players
         players = new ArrayList<>();
+        allPaths = new ArrayList<>();
         players.add(new Player(Color.RED, 700, 700));
-        players.add(new Player(Color.BLUE, 100, 100));
+        players.add(new Player(new Color(0, 255, 255), 100, 100));
         W = false;
         A = false;
         S = false;
@@ -32,6 +36,7 @@ public class Base extends JComponent implements Runnable, KeyListener
         LEFT = false;
         DOWN = false;
         RIGHT = false;
+        gameRun = true;
 
         //Start Thread
         setBackground(Color.WHITE);
@@ -63,7 +68,10 @@ public class Base extends JComponent implements Runnable, KeyListener
                     graphics2D.setColor(p.getColor());
                     graphics2D.fillRect(p.getX(), p.getY(), 10,10);
                     for (Path path : p.getPaths())
-                        graphics2D.fillRect(path.getX(), path.getY(), 10,10);
+                    {
+                        graphics2D.fillRect(path.getX(), path.getY(), 10, 10);
+                        allPaths.add(new Path(path.getX(), path.getY()));
+                    }
                 }
             }
         }
@@ -73,9 +81,10 @@ public class Base extends JComponent implements Runnable, KeyListener
     {
         try
         {
-            while( true )
+            while( gameRun )
             {
                 Thread.sleep(50);
+
                 if (W)
                     players.get(0).up();
                 if (A)
@@ -84,6 +93,20 @@ public class Base extends JComponent implements Runnable, KeyListener
                     players.get(0).down();
                 if (D)
                     players.get(0).right();
+                if (UP)
+                    players.get(1).up();
+                if (LEFT)
+                    players.get(1).left();
+                if (RIGHT)
+                    players.get(1).right();
+                if (DOWN)
+                    players.get(1).down();
+
+                for (Player player : players)
+                    for(Path path : allPaths)
+                        if (player.getX() == path.getX() && player.getY() == path.getY())
+                            gameRun = false;
+
                 repaint();
             }
         }
@@ -135,19 +158,28 @@ public class Base extends JComponent implements Runnable, KeyListener
             UP = true;
             LEFT = false;
             DOWN = false;
-            RIGHT = true;
+            RIGHT = false;
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT)
         {
-            players.get(1).left();
+            UP = false;
+            LEFT = true;
+            DOWN = false;
+            RIGHT = false;
         }
         if (e.getKeyCode() == KeyEvent.VK_DOWN)
         {
-            players.get(1).down();
+            UP = false;
+            LEFT = false;
+            DOWN = true;
+            RIGHT = false;
         }
         if (e.getKeyCode() == KeyEvent.VK_RIGHT)
         {
-            players.get(1).right();
+            UP = false;
+            LEFT = false;
+            DOWN = false;
+            RIGHT = true;
         }
     }
 
