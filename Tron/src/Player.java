@@ -43,11 +43,12 @@ public class Player
         y += 10;
     }
 
-    public boolean isAlive()
+    public boolean isAlive( Player otherPlayer)
     {
-        for (Path p : paths)
-            if (p.getX() == x && p.getY() == y)
+        for (Path p : otherPlayer.getPaths())
+            if (x == p.getX() && y == p.getY())
                 return false;
+
         return true;
     }
 
@@ -71,8 +72,8 @@ public class Player
         return paths;
     }
 
-    public void paintComponent( Graphics window )
+    public String toString()
     {
-        Graphics2D graphics2D = (Graphics2D) window;
+        return "(" + x + ", " + y + "): " + color;
     }
 }
