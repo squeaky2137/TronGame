@@ -9,13 +9,22 @@ import java.util.TreeMap;
 
 public class Path
 {
-    private Color color;
     private int x;
     private int y;
-    public Path(Color color, int x, int y)
+
+    public Path(int x, int y)
     {
-        this.color = color;
         this.x = x;
         this.y = y;
+    }
+
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
     }
 }
