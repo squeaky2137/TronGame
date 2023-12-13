@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent.*;
 
 public class Base extends JComponent implements Runnable, KeyListener
 {
-    private ArrayList<Player> players;
+    private final ArrayList<Player> players;
     private boolean W;
     private boolean A;
     private boolean S;
@@ -123,10 +123,7 @@ public class Base extends JComponent implements Runnable, KeyListener
 
     public boolean bounds(Player p)
     {
-           if (p.getX() >= 800 || p.getX() < 0 || p.getY() >= 800 || p.getY() < 0)
-               return false;
-
-           return true;
+        return p.getX() < 800 && p.getX() >= 0 && p.getY() < 800 && p.getY() >= 0;
     }
 
     @Override

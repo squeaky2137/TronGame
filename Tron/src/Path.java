@@ -9,8 +9,8 @@ import java.util.TreeMap;
 
 public class Path
 {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     public Path(int x, int y)
     {

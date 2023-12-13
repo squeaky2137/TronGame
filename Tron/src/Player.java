@@ -8,8 +8,8 @@ public class Player
 {
     private int x;
     private int y;
-    private Color color;
-    private ArrayList<Path> paths;
+    private final Color color;
+    private final ArrayList<Path> paths;
     public Player(Color color, int x, int y)
     {
         this.color = color;
