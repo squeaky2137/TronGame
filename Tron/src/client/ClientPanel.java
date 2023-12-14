@@ -16,21 +16,38 @@ public class ClientPanel extends JFrame {
     private BaseServer server;
     public static Client client;
 
-    public ClientPanel()
-    {
+    public ClientPanel() {
         super("Tron");
 
         setSize(WIDTH, HEIGHT);
 
+        //Title Screen
+        JLabel title = new JLabel("Tron");
+        title.setBounds(400, 100, 50, 50);
+        title.setBackground(Color.WHITE);
+
+        //BG Label
+        JLabel bg = new JLabel();
+
+        ImageIcon image = new ImageIcon("C:\\Users\\adico\\OneDrive\\Documents\\GitHub\\TronGame\\Tron\\maxresdefault.jpg"); // load the image to a imageIcon
+        Image scaledImage = image.getImage(); // transform it
+        Image newImg = scaledImage.getScaledInstance(400, 400,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        image = new ImageIcon(newImg);  // transform it back
+
+        bg.setIcon(image);
+        bg.setBounds(0, 0, image.getIconWidth(), image.getIconHeight());
+
+        //Create Server Button
         JButton CreateServer = new JButton();
         CreateServer.setText("make server");
-        CreateServer.setSize(100, 100);
+        CreateServer.setBounds(100, 100, 100, 100);
         CreateServer.setVisible(true);
         CreateServer.addActionListener(e -> createServer());
 
+        //Connect Server Button
         JButton ConnectToServer = new JButton();
-        ConnectToServer.setText("connect to server");
-        ConnectToServer.setSize(100, 100);
+        ConnectToServer.setText("Connect to Server");
+        ConnectToServer.setBounds(200, 200, 100, 100);
         ConnectToServer.setVisible(true);
         ConnectToServer.addActionListener(e -> {
             connectToServer();
@@ -41,7 +58,7 @@ public class ClientPanel extends JFrame {
 
             JButton startGameButton = new JButton();
             startGameButton.setText("start game");
-            startGameButton.setSize(50, 50);
+            startGameButton.setBounds(400, 400, 50, 50);
             startGameButton.setVisible(true);
             startGameButton.addActionListener(e1 -> {
                 remove(startGameButton);
@@ -55,9 +72,12 @@ public class ClientPanel extends JFrame {
 
         });
 
-        add(CreateServer);
+        add(bg);
         add(ConnectToServer);
+        add(CreateServer);
+        add(title);
 
+        setLayout(null);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
