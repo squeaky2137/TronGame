@@ -21,7 +21,7 @@ public class EventHandler {
         if(p instanceof JoinServer packet) {
             packet.id = connection.id;
 
-            System.out.println("join packet recieved from " + connection.id);
+            System.out.println("join packet received from " + connection.id);
             for(int i =0;i<ConnectionHandler.connections.size();i++) {
                 Connection c = ConnectionHandler.connections.get(i);
                 if(c!=connection) {

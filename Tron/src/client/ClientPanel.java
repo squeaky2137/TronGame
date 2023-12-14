@@ -25,40 +25,52 @@ public class ClientPanel extends JFrame {
         JButton CreateServer = new JButton();
         CreateServer.setText("make server");
         CreateServer.setSize(100, 100);
-        CreateServer.setVisible(true);
-        CreateServer.addActionListener(e -> createServer());
+
 
         JButton ConnectToServer = new JButton();
         ConnectToServer.setText("connect to server");
         ConnectToServer.setSize(100, 100);
+
+
+        JButton startGameButton = new JButton();
+        startGameButton.setText("start game");
+        startGameButton.setSize(50, 50);
+
+        add(startGameButton);
+
+        add(CreateServer);
+        add(ConnectToServer);
         ConnectToServer.setVisible(true);
+        CreateServer.setVisible(true);
+        startGameButton.setVisible(false);
+        setVisible(true);
+
+
+        //listeners
+        CreateServer.addActionListener(e -> {
+            createServer();
+            CreateServer.setVisible(false);
+        });
+        startGameButton.addActionListener(e1 -> {
+            startGameButton.setVisible(false);
+            StartGame startGame = new StartGame();
+            client.sendObject(startGame);
+            server.game.start();
+        });
         ConnectToServer.addActionListener(e -> {
             connectToServer();
             Base baseGame = new Base(client);
             add(baseGame);
-            remove(CreateServer);
-            remove(ConnectToServer);
-
-            JButton startGameButton = new JButton();
-            startGameButton.setText("start game");
-            startGameButton.setSize(50, 50);
+            baseGame.setVisible(true);
+            CreateServer.setVisible(false);
+            ConnectToServer.setVisible(false);
             startGameButton.setVisible(true);
-            startGameButton.addActionListener(e1 -> {
-                remove(startGameButton);
-                StartGame startGame = new StartGame();
-                client.sendObject(startGame);
-                server.game.start();
-                repaint();
-            });
-            add(startGameButton);
-            repaint();
+
 
         });
 
-        add(CreateServer);
-        add(ConnectToServer);
 
-        setVisible(true);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 

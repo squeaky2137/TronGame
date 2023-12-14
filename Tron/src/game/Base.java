@@ -88,8 +88,6 @@ public class Base extends JComponent implements Runnable, KeyListener
             while( true)
             {
                 Thread.sleep(50);
-
-//
                 repaint();
             }
         }
@@ -112,6 +110,7 @@ public class Base extends JComponent implements Runnable, KeyListener
     {
         if ((e.getKeyCode() == KeyEvent.VK_W) || (e.getKeyCode() == KeyEvent.VK_UP))
         {
+            System.out.println("W");
             client.player.setDirection(0);
             ChangeDirection changeDirection = new ChangeDirection();
             changeDirection.direction = 0;
@@ -119,6 +118,7 @@ public class Base extends JComponent implements Runnable, KeyListener
         }
         if ((e.getKeyCode() == KeyEvent.VK_A) || (e.getKeyCode() == KeyEvent.VK_LEFT))
         {
+            System.out.println("A");
             client.player.setDirection(2);
             ChangeDirection changeDirection = new ChangeDirection();
             changeDirection.direction = 2;
@@ -126,6 +126,7 @@ public class Base extends JComponent implements Runnable, KeyListener
         }
         if ((e.getKeyCode() == KeyEvent.VK_S) || (e.getKeyCode() == KeyEvent.VK_DOWN))
         {
+            System.out.println("S");
             client.player.setDirection(1);
             ChangeDirection changeDirection = new ChangeDirection();
             changeDirection.direction = 1;
@@ -133,6 +134,7 @@ public class Base extends JComponent implements Runnable, KeyListener
         }
         if ((e.getKeyCode() == KeyEvent.VK_D) || (e.getKeyCode() == KeyEvent.VK_RIGHT))
         {
+            System.out.println("D");
             client.player.setDirection(3);
             ChangeDirection changeDirection = new ChangeDirection();
             changeDirection.direction = 3;

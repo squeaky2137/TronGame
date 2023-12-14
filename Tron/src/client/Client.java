@@ -73,7 +73,6 @@ public class Client implements Runnable {
             while(running) {
                 try {
                     Object data = in.readObject();
-                    System.out.println("received " + data);
                     listener.received(data);
                 }catch(ClassNotFoundException e) {
                     e.printStackTrace();
