@@ -1,28 +1,33 @@
 package server;
 
+import game.Player;
+import packets.PlayerMove;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+
 
 public class Connection implements Runnable {
 
-    private Socket socket;
+    private final Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
     public int id;
     private EventHandler listener;
     private boolean running = false;
+    public Player player;
 
-    public Connection(Socket socket, int id) {
+    public Connection(Socket socket, int id, BaseServer server) {
         this.socket = socket;
         this.id = id;
-
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            listener = new EventHandler();
+            listener = new EventHandler(server);
         }catch(IOException e) {
             e.printStackTrace();
         }
@@ -46,6 +51,7 @@ public class Connection implements Runnable {
         }
     }
 
+
     public void close() {
         try {
             running = false;
@@ -58,6 +64,8 @@ public class Connection implements Runnable {
     }
 
     public void sendObject(Object packet) {
+//        System.out.println("Sending packet to " + id);
+//        System.out.println(packet);
         try {
             out.writeObject(packet);
             out.flush();

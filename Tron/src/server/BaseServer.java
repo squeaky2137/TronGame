@@ -1,19 +1,22 @@
 package server;
 
+import game.Game;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
 
-public class BaseServer implements Runnable{
+public class BaseServer implements Runnable {
     private final int port;
     private ServerSocket server;
     private int id;
     private boolean started;
+    public Game game;
 
-    public BaseServer(int port) throws UnknownHostException {
+    public BaseServer(int port) {
         this.port = port;
         try {
-            server = new ServerSocket(0);
+            server = new ServerSocket(port);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -29,37 +32,27 @@ public class BaseServer implements Runnable{
         String address = null;
         try {
             address = InetAddress.getLocalHost().getHostAddress();
-
-        if (address.equals("127.0.0.1")) {
-            NetworkInterface n = NetworkInterface.getByName("en0");
-            Enumeration<InetAddress> addresses = n.getInetAddresses();
-            System.out.println(addresses.nextElement().getHostAddress());
-            System.out.println(addresses.nextElement().getHostAddress());
-
-        }
-    }catch (UnknownHostException | SocketException e) {
+            System.out.println(address);
+            if (address.equals("127.0.0.1")) {
+                NetworkInterface n = NetworkInterface.getByName("en0");
+                Enumeration<InetAddress> addresses = n.getInetAddresses();
+                System.out.println(addresses.nextElement().getHostAddress());
+                System.out.println(addresses.nextElement().getHostAddress());
+            }
+        } catch (UnknownHostException | SocketException e) {
             throw new RuntimeException(e);
         }
-//        try {
-//            System.out.println("Host addr: " + InetAddress.getLocalHost().getHostAddress());  // often returns "127.0.0.1"
-//        for (; n.hasMoreElements();)
-//        {
-//            NetworkInterface e = n.nextElement();
-//            System.out.println("Interface: " + e.getName());
-//            Enumeration<InetAddress> a = e.getInetAddresses();
-//            for (; a.hasMoreElements();)
-//            {
-//                InetAddress addr = a.nextElement();
-//                System.out.println("  " + addr.getHostAddress());
-//            }
-//        }
+
 
         System.out.println("Server started on port: " + server.getLocalPort());
-        while(started) {
+        game = new Game(this);
+        while (started) {
             try {
-                Socket socket = server.accept();
-                initSocket(socket);
-            }catch(IOException e) {
+                if (ConnectionHandler.connections.size() < 4) {
+                    Socket socket = server.accept();
+                    initSocket(socket);
+                }
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -67,8 +60,8 @@ public class BaseServer implements Runnable{
     }
 
     private void initSocket(Socket socket) {
-        Connection connection = new Connection(socket,id);
-        ConnectionHandler.connections.put(id,connection);
+        Connection connection = new Connection(socket, id, this);
+        ConnectionHandler.connections.put(id, connection);
         new Thread(connection).start();
         id++;
     }
@@ -78,8 +71,22 @@ public class BaseServer implements Runnable{
 
         try {
             server.close();
-        }catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void sendToAll(Object o) {
+        for (Connection c : ConnectionHandler.connections.values()) {
+            c.sendObject(o);
+        }
+    }
+
+    public void sendToAllExcept(Object o, int id) {
+        for (Connection c : ConnectionHandler.connections.values()) {
+            if (c.id != id) {
+                c.sendObject(o);
+            }
         }
     }
 
