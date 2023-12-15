@@ -27,8 +27,19 @@ public class ClientPanel extends JFrame {
         // Title
         JLabel title = new JLabel("Tron");
         title.setFont(new Font(Font.MONOSPACED, Font.BOLD, 36));
-        title.setBounds(350, 50, 100, 30);
+        title.setBounds(350, 25, 100, 30);
         title.setForeground(Color.MAGENTA);
+
+        // Player Name Text Field and Label
+        JLabel name = new JLabel("Name: ");
+        name.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
+        name.setBounds(255, 525, 100, 30);
+        name.setForeground(Color.MAGENTA);
+        playerNameField = new JTextField();
+        playerNameField.setBounds(340, 525, 200, 30);
+        playerNameField.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
+        playerNameField.setBackground(Color.MAGENTA);
+        playerNameField.setForeground(Color.WHITE);
 
         // Background Image
         ImageIcon image = new ImageIcon("maxresdefault.jpg");
@@ -37,20 +48,14 @@ public class ClientPanel extends JFrame {
         JLabel bg = new JLabel(image);
         bg.setBounds(0, 0, image.getIconWidth(), image.getIconHeight());
         bg.add(title);
+        bg.add(name);
 
-        // Player Name Field
-        playerNameField = new JTextField();
-        playerNameField.setBounds(300, 550, 200, 30);
-        playerNameField.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
-        playerNameField.setBackground(Color.MAGENTA);
-        playerNameField.setForeground(Color.PINK);
-
-        // Create Server Button
+        // Make Server Button
         JButton createServer = createStyledButton("Make Server");
         createServer.setBounds(50, 600, 200, 50);
         createServer.addActionListener(e -> createServer());
 
-        // Connect Server Button
+        // Connect to Server Button
         connectToServerButton = createStyledButton("Connect to Server");
         connectToServerButton.setBounds(300, 600, 200, 50);
         connectToServerButton.setEnabled(false);
@@ -58,12 +63,12 @@ public class ClientPanel extends JFrame {
         // Scrollable server list
         DefaultListModel<String> serverListModel = new DefaultListModel<>();
         serverList = new JList<>(serverListModel);
-        serverList.setBackground(Color.PINK);
-        serverList.setForeground(Color.WHITE);
+        serverList.setBackground(Color.MAGENTA);
+        serverList.setForeground(Color.PINK);
         JScrollPane serverScrollPane = new JScrollPane(serverList);
         serverScrollPane.setBounds(200, 100, 400, 400);
 
-        //Show connect to server button
+        // Show connect to server button and ActionListener
         serverList.addListSelectionListener(e -> connectToServerButton.setEnabled(!serverList.isSelectionEmpty()));
         connectToServerButton.addActionListener(e -> {
             if (!playerNameField.getText().isEmpty()) {
@@ -73,9 +78,10 @@ public class ClientPanel extends JFrame {
                 createServer.setVisible(false);
                 connectToServerButton.setVisible(false);
                 playerNameField.setVisible(false);
+                bg.remove(name);
 
                 JButton startGameButton = createStyledButton("Start Game");
-                startGameButton.setBounds(550, 600, 200, 50);
+                startGameButton.setBounds(300, 600, 200, 50);
                 startGameButton.addActionListener(e1 -> {
                     startGameButton.setVisible(false);
                     StartGame startGame = new StartGame();
