@@ -21,10 +21,10 @@ public class ClientPanel extends JFrame {
 
         setSize(WIDTH, HEIGHT);
 
-        //Title Screen
+        //Title
         JLabel title = new JLabel("Tron");
-        title.setBounds(400, 100, 50, 50);
-        title.setBackground(Color.WHITE);
+        title.setBounds(400, 10, 100, 50);
+        title.setForeground(Color.PINK);
 
         ImageIcon image = new ImageIcon("C:\\Users\\adico\\OneDrive\\Documents\\GitHub\\TronGame\\Tron\\maxresdefault.jpg"); // load the image to a imageIcon
         Image scaledImage = image.getImage(); // transform it
@@ -35,6 +35,7 @@ public class ClientPanel extends JFrame {
         JLabel bg = new JLabel();
         bg.setIcon(image);
         bg.setBounds(0, 0, image.getIconWidth(), image.getIconHeight());
+        bg.add(title);
 
         //Create Server Button
         JButton CreateServer = new JButton();
@@ -52,8 +53,8 @@ public class ClientPanel extends JFrame {
             connectToServer();
             Base baseGame = new Base(client);
             add(baseGame);
-            remove(CreateServer);
-            remove(ConnectToServer);
+            CreateServer.setVisible(false);
+            ConnectToServer.setVisible(false);
 
             JButton startGameButton = new JButton();
             startGameButton.setText("start game");
@@ -70,10 +71,10 @@ public class ClientPanel extends JFrame {
             repaint();
         });
 
+        //add everything
         add(bg);
         add(ConnectToServer);
         add(CreateServer);
-        add(title);
 
         setLayout(null);
         setVisible(true);

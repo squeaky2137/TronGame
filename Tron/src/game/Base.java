@@ -50,7 +50,7 @@ public class Base extends JComponent implements Runnable, KeyListener
                 //Draw Background
                 graphics2D.setColor(Color.BLACK);
                 graphics2D.fillRect(i,j, 80, 80);
-                graphics2D.setColor(Color.PINK);
+                graphics2D.setColor(Color.GRAY);
                 graphics2D.setStroke(new BasicStroke(2));
                 graphics2D.drawRect(i, j, 80, 80);
 
