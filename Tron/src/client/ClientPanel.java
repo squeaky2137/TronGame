@@ -17,6 +17,8 @@ public class ClientPanel extends JFrame {
     public static Client client;
     private JList<String> serverList;
     private JButton connectToServerButton;
+    private JTextField playerNameField;
+
     public ClientPanel() {
         super("Tron");
 
@@ -24,8 +26,8 @@ public class ClientPanel extends JFrame {
 
         // Title
         JLabel title = new JLabel("Tron");
-        title.setFont(new Font("Arial", Font.BOLD, 36));
-        title.setBounds(350, 50, 100, 50);
+        title.setFont(new Font(Font.MONOSPACED, Font.BOLD, 36));
+        title.setBounds(350, 50, 100, 30);
         title.setForeground(Color.MAGENTA);
 
         // Background Image
@@ -35,6 +37,13 @@ public class ClientPanel extends JFrame {
         JLabel bg = new JLabel(image);
         bg.setBounds(0, 0, image.getIconWidth(), image.getIconHeight());
         bg.add(title);
+
+        // Player Name Field
+        playerNameField = new JTextField();
+        playerNameField.setBounds(300, 550, 200, 30);
+        playerNameField.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
+        playerNameField.setBackground(Color.MAGENTA);
+        playerNameField.setForeground(Color.PINK);
 
         // Create Server Button
         JButton createServer = createStyledButton("Make Server");
@@ -52,28 +61,33 @@ public class ClientPanel extends JFrame {
         serverList.setBackground(Color.PINK);
         serverList.setForeground(Color.WHITE);
         JScrollPane serverScrollPane = new JScrollPane(serverList);
-        serverScrollPane.setBounds(550, 100, 200, 150);
+        serverScrollPane.setBounds(200, 100, 400, 400);
 
+        //Show connect to server button
         serverList.addListSelectionListener(e -> connectToServerButton.setEnabled(!serverList.isSelectionEmpty()));
         connectToServerButton.addActionListener(e -> {
-            connectToServer();
-            Base baseGame = new Base(client);
-            add(baseGame);
-            createServer.setVisible(false);
-            connectToServerButton.setVisible(false);
-            serverScrollPane.setVisible(false);
+            if (!playerNameField.getText().isEmpty()) {
+                connectToServer();
+                Base baseGame = new Base(client);
+                add(baseGame);
+                createServer.setVisible(false);
+                connectToServerButton.setVisible(false);
+                playerNameField.setVisible(false);
 
-            JButton startGameButton = createStyledButton("Start Game");
-            startGameButton.setBounds(550, 600, 200, 50);
-            startGameButton.addActionListener(e1 -> {
-                startGameButton.setVisible(false);
-                StartGame startGame = new StartGame();
-                client.sendObject(startGame);
-                server.game.start();
+                JButton startGameButton = createStyledButton("Start Game");
+                startGameButton.setBounds(550, 600, 200, 50);
+                startGameButton.addActionListener(e1 -> {
+                    startGameButton.setVisible(false);
+                    StartGame startGame = new StartGame();
+                    client.sendObject(startGame);
+                    server.game.start();
+                    repaint();
+                });
+                add(startGameButton);
                 repaint();
-            });
-            add(startGameButton);
-            repaint();
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter your name before connecting to the server.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         // Add everything
@@ -81,6 +95,8 @@ public class ClientPanel extends JFrame {
         add(connectToServerButton);
         add(createServer);
         add(serverScrollPane);
+        add(playerNameField);
+
         serverScrollPane.setVisible(true);
         connectToServerButton.setVisible(true);
 
@@ -93,7 +109,7 @@ public class ClientPanel extends JFrame {
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
         button.setForeground(Color.PINK);
         button.setBackground(Color.MAGENTA);
         button.setFocusPainted(false);
