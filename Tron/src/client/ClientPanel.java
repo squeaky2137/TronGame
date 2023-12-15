@@ -26,14 +26,13 @@ public class ClientPanel extends JFrame {
         title.setBounds(400, 100, 50, 50);
         title.setBackground(Color.WHITE);
 
-        //BG Label
-        JLabel bg = new JLabel();
-
         ImageIcon image = new ImageIcon("C:\\Users\\adico\\OneDrive\\Documents\\GitHub\\TronGame\\Tron\\maxresdefault.jpg"); // load the image to a imageIcon
         Image scaledImage = image.getImage(); // transform it
-        Image newImg = scaledImage.getScaledInstance(400, 400,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        Image newImg = scaledImage.getScaledInstance(800, 765,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         image = new ImageIcon(newImg);  // transform it back
 
+        //BG Label
+        JLabel bg = new JLabel();
         bg.setIcon(image);
         bg.setBounds(0, 0, image.getIconWidth(), image.getIconHeight());
 
@@ -69,7 +68,6 @@ public class ClientPanel extends JFrame {
             });
             add(startGameButton);
             repaint();
-
         });
 
         add(bg);
