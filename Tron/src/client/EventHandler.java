@@ -13,6 +13,7 @@ public class EventHandler {
     }
 
     public void received(Object p) {
+        System.out.println(p);
         if(p instanceof JoinServer packet) {
             ConnectionHandler.connections.put(packet.id, new Connection(packet.id, new Player(Color.RED, 0, 0,1 )));
             System.out.println(packet.id + " has connected");
@@ -23,7 +24,7 @@ public class EventHandler {
 //            System.out.println(packet.id + " has moved");
             ConnectionHandler.connections.get(packet.id).player.move();
         } else if(p instanceof SelfMove packet) {
-//            System.out.println(packet.id + " has moved");
+            System.out.println(packet.id + " has moved");
             client.player.move();
         } else if(p instanceof ChangeDirection packet) {
             ConnectionHandler.connections.get(packet.id).player.setDirection(packet.direction);

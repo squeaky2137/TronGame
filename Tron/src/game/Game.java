@@ -70,12 +70,13 @@ public class Game implements Runnable {
 //                    }
 
 
-
+                    System.out.println(ConnectionHandler.connections.keySet());
                     PlayerMove playerMove = new PlayerMove();
                     playerMove.id = c.id;
                     server.sendToAllExcept(playerMove, c.id);
                     SelfMove selfMove = new SelfMove();
                     selfMove.id = c.id;
+//                    System.out.println(selfMove);
                     c.sendObject(selfMove);
                 }
             }

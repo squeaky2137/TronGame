@@ -67,6 +67,7 @@ public class Connection implements Runnable {
 //        System.out.println("Sending packet to " + id);
 //        System.out.println(packet);
         try {
+            System.out.println("Sending packet to " + id);
             out.writeObject(packet);
             out.flush();
         }catch(IOException e) {

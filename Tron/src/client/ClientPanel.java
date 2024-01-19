@@ -107,6 +107,57 @@ public class ClientPanel extends JFrame {
         connectToServerButton.setVisible(true);
 
         setLayout(null);
+  /*
+        JButton CreateServer = new JButton();
+        CreateServer.setText("make server");
+        CreateServer.setSize(100, 100);
+
+
+        JButton ConnectToServer = new JButton();
+        ConnectToServer.setText("connect to server");
+        ConnectToServer.setSize(100, 100);
+
+
+        JButton startGameButton = new JButton();
+        startGameButton.setText("start game");
+        startGameButton.setSize(50, 50);
+
+        add(startGameButton);
+
+        add(CreateServer);
+        add(ConnectToServer);
+        ConnectToServer.setVisible(true);
+        CreateServer.setVisible(true);
+        startGameButton.setVisible(false);
+        setVisible(true);
+
+
+        //listeners
+        CreateServer.addActionListener(e -> {
+            createServer();
+            CreateServer.setVisible(false);
+        });
+        startGameButton.addActionListener(e1 -> {
+            startGameButton.setVisible(false);
+            StartGame startGame = new StartGame();
+            client.sendObject(startGame);
+            server.game.start();
+        });
+        ConnectToServer.addActionListener(e -> {
+            connectToServer();
+            Base baseGame = new Base(client);
+            add(baseGame);
+            baseGame.setVisible(true);
+            CreateServer.setVisible(false);
+            ConnectToServer.setVisible(false);
+            startGameButton.setVisible(true);
+
+
+        });
+
+
+*/
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
