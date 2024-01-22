@@ -1,4 +1,4 @@
-package server;
+package LobbyServer.LobbyServer;
 
 import game.Game;
 
@@ -6,17 +6,17 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
 
-public class BaseServer implements Runnable {
-    public ServerSocket server;
+public class LobbyServer implements Runnable {
+    private final int port;
+    private ServerSocket server;
     private int id;
     private boolean started;
     public Game game;
 
-    public BaseServer() {
+    public LobbyServer(int port) {
+        this.port = port;
         try {
-            server = new ServerSocket(0);
-            System.out.println("Server started on port: " + server.getLocalPort());
-            System.out.println("Server started on ip: " + server.getInetAddress().getHostAddress());
+            server = new ServerSocket(port);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,13 +45,10 @@ public class BaseServer implements Runnable {
 
 
         System.out.println("Server started on port: " + server.getLocalPort());
-        game = new Game(this);
         while (started) {
             try {
-                if (ConnectionHandler.connections.size() < 4) {
-                    Socket socket = server.accept();
-                    initSocket(socket);
-                }
+                Socket socket = server.accept();
+                initSocket(socket);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -60,6 +57,7 @@ public class BaseServer implements Runnable {
     }
 
     private void initSocket(Socket socket) {
+        System.out.println("LOBBY ->> New connection from: " + socket.getInetAddress());
         Connection connection = new Connection(socket, id, this);
         ConnectionHandler.connections.put(id, connection);
         new Thread(connection).start();

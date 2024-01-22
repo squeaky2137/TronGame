@@ -1,5 +1,10 @@
 package client;
 
+import LobbyServer.LobbyClient.LobbyClient;
+import LobbyServer.LobbyClient.ServerHandler;
+import LobbyServer.packets.Connect;
+import LobbyServer.packets.CreateServer;
+import LobbyServer.packets.ServerCreated;
 import game.Base;
 import packets.JoinServer;
 import packets.StartGame;
@@ -7,22 +12,34 @@ import server.BaseServer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ClientPanel extends JFrame {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
     private BaseServer server;
     public static Client client;
-    private JList<String> serverList;
+    private static JList<String> serverList;
     private JButton connectToServerButton;
     private JTextField playerNameField;
+    private JButton createServer;
+    private LobbyClient lobbyClient;
+    public JLabel bg;
+    private JLabel name;
+    public Base baseGame;
 
     public ClientPanel() {
         super("Tron");
 
         setSize(WIDTH, HEIGHT);
+
+        DefaultListModel<String> serverListModel = new DefaultListModel<>();
+        serverList = new JList<>(serverListModel);
+
+        //Connect to the games main server
+        lobbyClient = new LobbyClient("localhost", 25565, serverList);
+        lobbyClient.connect();
+        Connect connectPacket = new Connect();
+        lobbyClient.sendObject(connectPacket);
 
         // Title
         JLabel title = new JLabel("Tron");
@@ -31,7 +48,7 @@ public class ClientPanel extends JFrame {
         title.setForeground(Color.MAGENTA);
 
         // Player Name Text Field and Label
-        JLabel name = new JLabel("Name: ");
+        name = new JLabel("Name: ");
         name.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
         name.setBounds(255, 525, 100, 30);
         name.setForeground(Color.MAGENTA);
@@ -42,16 +59,16 @@ public class ClientPanel extends JFrame {
         playerNameField.setForeground(Color.WHITE);
 
         // Background Image
-        ImageIcon image = new ImageIcon("maxresdefault.jpg");
+        ImageIcon image = new ImageIcon("/Users/squeaky2137/IdeaProjects/TronGame/Tron/maxresdefault.jpg");
         Image scaledImage = image.getImage().getScaledInstance(800, 765, Image.SCALE_SMOOTH);
         image = new ImageIcon(scaledImage);
-        JLabel bg = new JLabel(image);
+        bg = new JLabel(image);
         bg.setBounds(0, 0, image.getIconWidth(), image.getIconHeight());
         bg.add(title);
         bg.add(name);
 
         // Make Server Button
-        JButton createServer = createStyledButton("Make Server");
+        createServer = createStyledButton("Make Server");
         createServer.setBounds(50, 600, 200, 50);
         createServer.addActionListener(e -> createServer());
 
@@ -61,8 +78,6 @@ public class ClientPanel extends JFrame {
         connectToServerButton.setEnabled(false);
 
         // Scrollable server list
-        DefaultListModel<String> serverListModel = new DefaultListModel<>();
-        serverList = new JList<>(serverListModel);
         serverList.setBackground(Color.MAGENTA);
         serverList.setForeground(Color.PINK);
         JScrollPane serverScrollPane = new JScrollPane(serverList);
@@ -72,95 +87,44 @@ public class ClientPanel extends JFrame {
         serverList.addListSelectionListener(e -> connectToServerButton.setEnabled(!serverList.isSelectionEmpty()));
         connectToServerButton.addActionListener(e -> {
             if (!playerNameField.getText().isEmpty()) {
-                connectToServer();
-                Base baseGame = new Base(client);
-                add(baseGame);
-                createServer.setVisible(false);
-                connectToServerButton.setVisible(false);
-                playerNameField.setVisible(false);
-                bg.remove(name);
-
-                JButton startGameButton = createStyledButton("Start Game");
-                startGameButton.setBounds(300, 600, 200, 50);
-                startGameButton.addActionListener(e1 -> {
-                    startGameButton.setVisible(false);
-                    StartGame startGame = new StartGame();
-                    client.sendObject(startGame);
-                    server.game.start();
-                    repaint();
-                });
-                add(startGameButton);
-                repaint();
+                int selectedIndex = serverList.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    String selectedServer = serverList.getModel().getElementAt(selectedIndex);
+                    String server = ServerHandler.Servers.get(selectedServer.split("'s server")[0]);
+                    String[] parts = server.split(":");
+                    int port = Integer.parseInt(parts[1].trim());
+                    connectToServer(parts[0], port);
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Please enter your name before connecting to the server.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
+        baseGame = new Base();
+        baseGame.setBounds(0, 0, 800, 800);
+
+
+
+
         // Add everything
+
         add(bg);
-        add(connectToServerButton);
-        add(createServer);
-        add(serverScrollPane);
-        add(playerNameField);
+        add(baseGame);
+        bg.add(connectToServerButton);
+        bg.add(createServer);
+        bg.add(serverScrollPane);
+        bg.add(playerNameField);
+        baseGame.setVisible(true);
 
         serverScrollPane.setVisible(true);
         connectToServerButton.setVisible(true);
+        baseGame.setVisible(false);
 
         setLayout(null);
-  /*
-        JButton CreateServer = new JButton();
-        CreateServer.setText("make server");
-        CreateServer.setSize(100, 100);
-
-
-        JButton ConnectToServer = new JButton();
-        ConnectToServer.setText("connect to server");
-        ConnectToServer.setSize(100, 100);
-
-
-        JButton startGameButton = new JButton();
-        startGameButton.setText("start game");
-        startGameButton.setSize(50, 50);
-
-        add(startGameButton);
-
-        add(CreateServer);
-        add(ConnectToServer);
-        ConnectToServer.setVisible(true);
-        CreateServer.setVisible(true);
-        startGameButton.setVisible(false);
-        setVisible(true);
-
-
-        //listeners
-        CreateServer.addActionListener(e -> {
-            createServer();
-            CreateServer.setVisible(false);
-        });
-        startGameButton.addActionListener(e1 -> {
-            startGameButton.setVisible(false);
-            StartGame startGame = new StartGame();
-            client.sendObject(startGame);
-            server.game.start();
-        });
-        ConnectToServer.addActionListener(e -> {
-            connectToServer();
-            Base baseGame = new Base(client);
-            add(baseGame);
-            baseGame.setVisible(true);
-            CreateServer.setVisible(false);
-            ConnectToServer.setVisible(false);
-            startGameButton.setVisible(true);
-
-
-        });
-
-
-*/
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
+        setResizable(true);
         setVisible(true);
     }
 
@@ -173,28 +137,54 @@ public class ClientPanel extends JFrame {
         return button;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         SwingUtilities.invokeLater(() -> new ClientPanel());
     }
 
     public void createServer() {
-        server = new BaseServer(6969);
-        server.start();
-        ((DefaultListModel<String>) serverList.getModel()).addElement("Server at localhost:6969");
+        if (playerNameField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter your name before connecting to the server.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            server = new BaseServer();
+            server.start();
+//            ((DefaultListModel<String>) serverList.getModel()).addElement("Server at localhost:6969");
+            createServer.setVisible(false);
+            CreateServer createServerPacket = new CreateServer();
+            createServerPacket.name = playerNameField.getText();
+            createServerPacket.ip = server.server.getInetAddress().getHostAddress() + ":" + server.server.getLocalPort();
+            lobbyClient.sendObject(createServerPacket);
+
+            connectToServer("localhost", server.server.getLocalPort());
+            JButton startGameButton = createStyledButton("Start Game");
+            startGameButton.setBounds(300, 600, 200, 50);
+            startGameButton.addActionListener(e1 -> {
+                startGameButton.setVisible(false);
+                baseGame.setVisible(true);
+                bg.setVisible(false);
+
+                StartGame startGame = new StartGame();
+                client.sendObject(startGame);
+                server.game.start();
+            });
+            bg.add(startGameButton);
+        }
     }
 
-    public void connectToServer() {
-        int selectedIndex = serverList.getSelectedIndex();
-        if (selectedIndex != -1) {
-            String selectedServer = serverList.getModel().getElementAt(selectedIndex);
-            String[] parts = selectedServer.split(":");
-            int port = Integer.parseInt(parts[1].trim());
-            client = new Client("localhost", port);
+    public void connectToServer(String ip, int port) {
+            client = new Client(ip, port, serverList);
             client.connect();
-
+            client.clientPanel = this;
             JoinServer joinPacket = new JoinServer();
+            joinPacket.name = playerNameField.getText();
             client.sendObject(joinPacket);
-        }
+            baseGame.client = client;
+        serverList.setModel(new DefaultListModel<>());
+        ((DefaultListModel<String>) serverList.getModel()).addElement(playerNameField.getText());
+        createServer.setVisible(false);
+        connectToServerButton.setVisible(false);
+        playerNameField.setVisible(false);
+        bg.remove(name);
     }
 }
 

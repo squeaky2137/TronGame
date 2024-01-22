@@ -1,13 +1,11 @@
-package server;
+package LobbyServer.LobbyServer;
 
 import game.Player;
-import packets.PlayerMove;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.HashMap;
 
 
 public class Connection implements Runnable {
@@ -20,9 +18,8 @@ public class Connection implements Runnable {
     private EventHandler listener;
     private boolean running = false;
     public Player player;
-    public String name;
 
-    public Connection(Socket socket, int id, BaseServer server) {
+    public Connection(Socket socket, int id, LobbyServer server) {
         this.socket = socket;
         this.id = id;
         try {

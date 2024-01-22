@@ -3,15 +3,12 @@ package game;
 import client.Client;
 import client.Connection;
 import client.ConnectionHandler;
-import game.Path;
-import game.Player;
 import packets.ChangeDirection;
 
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.*;
 
 public class Base extends JComponent implements Runnable, KeyListener
 {
@@ -24,15 +21,15 @@ public class Base extends JComponent implements Runnable, KeyListener
     private boolean LEFT;
     private boolean RIGHT;
 
-    private Client client;
+    public Client client;
 
-    public Base(Client client)
+    public Base()
     {
         //Instantiate Players
-        this.client = client;
+
 
         //Start Thread
-        setBackground(Color.WHITE);
+        setBackground(Color.BLACK);
         addKeyListener(this);
         setFocusable(true);
         new Thread(this).start();
@@ -41,6 +38,8 @@ public class Base extends JComponent implements Runnable, KeyListener
     @Override
     public void paintComponent( Graphics window )
     {
+        if (client == null)
+            return;
         Graphics2D graphics2D = (Graphics2D) window;
 
         for(int i = 0;i<800;i+=80)
@@ -57,25 +56,27 @@ public class Base extends JComponent implements Runnable, KeyListener
                 //draw Players and their Paths
                 for (Integer id : ConnectionHandler.connections.keySet())
                 {
+
                     Connection c = ConnectionHandler.connections.get(id);
                     Player p = c.player;
                     if(p.isAlive()) {
                         graphics2D.setColor(p.getColor());
                         graphics2D.fillRect(p.getX(), p.getY(), 10, 10);
-                        for (Path path : p.getPaths()) {
+                        for (int k = 0; k < p.getPaths().size(); k++) {
+                            Path path = p.getPaths().get(k);
                             graphics2D.fillRect(path.x(), path.y(), 10, 10);
                         }
                     }
                 }
 
                 //draw self
-                if(client.player.isAlive()) {
-                    graphics2D.setColor(client.player.getColor());
-                    graphics2D.fillRect(client.player.getX(), client.player.getY(), 10, 10);
-                    for (Path path : client.player.getPaths()) {
-                        graphics2D.fillRect(path.x(), path.y(), 10, 10);
-                    }
-                }
+//                if(client.player.isAlive()) {
+//                    graphics2D.setColor(client.player.getColor());
+//                    graphics2D.fillRect(client.player.getX(), client.player.getY(), 10, 10);
+//                    for (Path path : client.player.getPaths()) {
+//                        graphics2D.fillRect(path.x(), path.y(), 10, 10);
+//                    }
+//                }
 
             }
         }
@@ -88,7 +89,7 @@ public class Base extends JComponent implements Runnable, KeyListener
             while( true)
             {
                 Thread.sleep(50);
-                repaint();
+                this.repaint();
             }
         }
         catch( Exception e )
@@ -111,32 +112,35 @@ public class Base extends JComponent implements Runnable, KeyListener
         if ((e.getKeyCode() == KeyEvent.VK_W) || (e.getKeyCode() == KeyEvent.VK_UP))
         {
             System.out.println("W");
-            client.player.setDirection(0);
+
             ChangeDirection changeDirection = new ChangeDirection();
+            changeDirection.id = client.id;
             changeDirection.direction = 0;
             client.sendObject(changeDirection);
         }
         if ((e.getKeyCode() == KeyEvent.VK_A) || (e.getKeyCode() == KeyEvent.VK_LEFT))
         {
             System.out.println("A");
-            client.player.setDirection(2);
+
             ChangeDirection changeDirection = new ChangeDirection();
+            changeDirection.id = client.id;
             changeDirection.direction = 2;
             client.sendObject(changeDirection);
         }
         if ((e.getKeyCode() == KeyEvent.VK_S) || (e.getKeyCode() == KeyEvent.VK_DOWN))
         {
             System.out.println("S");
-            client.player.setDirection(1);
             ChangeDirection changeDirection = new ChangeDirection();
+            changeDirection.id = client.id;
             changeDirection.direction = 1;
             client.sendObject(changeDirection);
         }
         if ((e.getKeyCode() == KeyEvent.VK_D) || (e.getKeyCode() == KeyEvent.VK_RIGHT))
         {
             System.out.println("D");
-            client.player.setDirection(3);
+
             ChangeDirection changeDirection = new ChangeDirection();
+            changeDirection.id = client.id;
             changeDirection.direction = 3;
             client.sendObject(changeDirection);
         }

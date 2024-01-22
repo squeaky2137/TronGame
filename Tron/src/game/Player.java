@@ -98,6 +98,17 @@ public class Player
         return direction;
     }
 
+    public void beginMovement() {
+        while (alive) {
+            move();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /*
     Direction:
     0 = up

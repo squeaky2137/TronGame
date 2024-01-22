@@ -1,12 +1,11 @@
-package packets;
+package LobbyServer.packets;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-public class JoinServer implements Serializable {
+public class ServerCreated implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
-    public int id;
+    public String ip;
     public String name;
 }

@@ -1,10 +1,9 @@
-package client;
+package LobbyServer.LobbyClient;
 
+import client.ClientPanel;
 import game.Player;
-import packets.LeaveServer;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,7 +11,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 
-public class Client implements Runnable {
+public class LobbyClient implements Runnable {
     private final String host;
     private final int port;
 
@@ -21,14 +20,13 @@ public class Client implements Runnable {
     private ObjectInputStream in;
 
     private boolean running = false;
-    private EventHandler listener;
-    public JList<String> serverList;
-    public ClientPanel clientPanel;
+    private ClientEventHandler listener;
+    private JList<String> serverList;
 
-
+    public Player player;
     public int id = -1;
 
-    public Client(String host, int port, JList<String> list) {
+    public LobbyClient(String host, int port, JList<String> list) {
         this.host = host;
         this.port = port;
         this.serverList = list;
@@ -39,7 +37,7 @@ public class Client implements Runnable {
             socket = new Socket(host,port);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            listener = new EventHandler(this);
+            listener = new ClientEventHandler(serverList);
             new Thread(this).start();
         }catch(ConnectException e) {
             System.out.println("Unable to connect to the server");
@@ -51,9 +49,6 @@ public class Client implements Runnable {
     public void close() {
         try {
             System.out.println("Closing client");
-            running = false;
-            LeaveServer packet = new LeaveServer();
-            sendObject(packet);
             in.close();
             out.close();
             socket.close();
@@ -74,8 +69,6 @@ public class Client implements Runnable {
     public void run() {
         try {
             running = true;
-
-
             while(running) {
                 try {
                     Object data = in.readObject();
@@ -92,6 +85,5 @@ public class Client implements Runnable {
             e.printStackTrace();
         }
     }
-
 
 }
